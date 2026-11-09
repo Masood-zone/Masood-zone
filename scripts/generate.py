@@ -111,7 +111,7 @@ def main():
     art = artwork()
     panels = {theme: render(config, stats, theme, art) for theme in THEMES}
     for theme, panel in panels.items():
-        target = ROOT / f"assets/profile-{theme}.svg"
+        target = ROOT / f"assets/terminal-{theme}.svg"
         temporary = target.with_suffix(".tmp")
         temporary.write_text(panel, encoding="utf-8", newline="\n")
         temporary.replace(target)
