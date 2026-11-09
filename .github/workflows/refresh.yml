@@ -10,7 +10,7 @@ on:
       - profile.json
       - scripts/**
       - requirements.txt
-      - assets/waterfall.png
+      - assets/ascii-art.png
       - .github/workflows/refresh.yml
 
 permissions:

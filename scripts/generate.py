@@ -1,5 +1,6 @@
-"""Generate standalone SVG profile panels from a photograph and public GitHub data."""
+"""Generate SVG profile panels with supplied artwork and public GitHub data."""
 
+import base64
 import json
 import os
 from pathlib import Path
@@ -7,7 +8,7 @@ from urllib.parse import quote
 from urllib.request import Request, urlopen
 from xml.sax.saxutils import escape
 
-from PIL import Image, ImageEnhance, ImageOps
+from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -42,9 +43,10 @@ THEMES = {
 
 
 def artwork():
-    with Image.open(ROOT / "assets/waterfall.png") as source:
-        gray = ImageOps.grayscale(source.convert("RGB").resize((78, 58), Image.Resampling.LANCZOS))
-    return ImageEnhance.Contrast(gray).enhance(1.25)
+    path = ROOT / "assets/ascii-art.png"
+    with Image.open(path) as source:
+        source.verify()
+    return base64.b64encode(path.read_bytes()).decode("ascii")
 
 
 def render(config, stats, theme, art):
@@ -60,16 +62,9 @@ def render(config, stats, theme, art):
         out.append(f'<text x="{x}" y="{y}" fill="{colors[color]}" font-size="{size}" font-weight="{weight}" xml:space="preserve">{escape(str(content))}</text>')
 
     text(38, 48, "Masood-zone / README.md", "muted", 11)
-    ramp = ".,:;i1tfLCG08@"
-    for row in range(art.height):
-        for col in range(78):
-            brightness = art.getpixel((col, row))
-            # Keep the photograph's black circular surround empty.
-            if brightness < 10:
-                continue
-            char = ramp[min(len(ramp) - 1, brightness * len(ramp) // 256)]
-            color = "text" if brightness > 150 else "art"
-            text(round(36 + col * 4.65, 2), round(105 + row * 6.3, 2), char, color, 7.8)
+    # Embed the original bytes so the supplied characters, colors and background
+    # survive scheduled refreshes without conversion or external image requests.
+    out.append(f'<image x="36" y="70" width="374" height="440" preserveAspectRatio="xMidYMid meet" href="data:image/png;base64,{art}"/>')
 
     text(438, 92, config["username"], "text", 17, "bold")
     out.append(f'<path d="M438 107H950" stroke="{colors["border"]}"/>')

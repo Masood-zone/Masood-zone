@@ -1,4 +1,5 @@
 """Checks for pagination, data privacy and failure preservation."""
+import base64
 import json
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -40,6 +41,9 @@ class ProfileTests(unittest.TestCase):
             root = ElementTree.fromstring(svg)
             self.assertEqual(root.attrib["viewBox"], "0 0 1000 550")
             self.assertIn("Name &amp; &lt;test&gt;", svg)
+            image = root.find(".//{http://www.w3.org/2000/svg}image")
+            original = base64.b64decode(image.attrib["href"].split(",", 1)[1])
+            self.assertEqual(original, (generate.ROOT / "assets/ascii-art.png").read_bytes())
 
 
 if __name__ == "__main__":
