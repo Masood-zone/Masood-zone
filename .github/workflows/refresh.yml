@@ -1,0 +1,45 @@
+name: Refresh profile
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - profile.json
+      - scripts/**
+      - requirements.txt
+      - assets/waterfall.png
+      - .github/workflows/refresh.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: profile-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python -m unittest discover -s scripts -p 'test_*.py'
+      - run: python scripts/generate.py
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - name: Commit changed panels
+        run: |
+          git add assets/profile-dark.svg assets/profile-light.svg
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Refresh public profile statistics'
+          git push
