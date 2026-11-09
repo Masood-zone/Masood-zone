@@ -25,12 +25,12 @@ class ProfileTests(unittest.TestCase):
             (root / "assets").mkdir()
             (root / "profile.json").write_text('{"username":"Masood-zone"}')
             for theme in generate.THEMES:
-                (root / f"assets/profile-{theme}.svg").write_text("previous")
+                (root / f"assets/terminal-{theme}.svg").write_text("previous")
             with patch.object(generate, "ROOT", root), patch.object(generate, "fetch_stats", side_effect=RuntimeError("API unavailable")):
                 with self.assertRaises(RuntimeError):
                     generate.main()
             for theme in generate.THEMES:
-                self.assertEqual((root / f"assets/profile-{theme}.svg").read_text(), "previous")
+                self.assertEqual((root / f"assets/terminal-{theme}.svg").read_text(), "previous")
 
     def test_both_panels_are_valid_xml(self):
         config = json.loads((generate.ROOT / "profile.json").read_text())
