@@ -62,9 +62,24 @@ def render(config, stats, theme, art):
         out.append(f'<text x="{x}" y="{y}" fill="{colors[color]}" font-size="{size}" font-weight="{weight}" xml:space="preserve">{escape(str(content))}</text>')
 
     text(38, 48, "Masood-zone / README.md", "muted", 11)
-    # Embed the original bytes so the supplied characters, colors and background
-    # survive scheduled refreshes without conversion or external image requests.
-    out.append(f'<image x="36" y="70" width="374" height="440" preserveAspectRatio="xMidYMid meet" href="data:image/png;base64,{art}"/>')
+    # Remove the PNG's #0a0a0a matte at render time; retain the source artwork.
+    # A soft luminance mask keeps antialiased character edges without a box.
+    out.append('''<defs>
+      <filter id="ink" color-interpolation-filters="sRGB" x="0" y="0" width="100%" height="100%">
+        <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  1.7008 5.7216 0.5776 0 -0.31372549"/>
+        <feComponentTransfer>
+          <feFuncR type="gamma" amplitude="1" exponent="0.45" offset="0"/>
+          <feFuncG type="gamma" amplitude="1" exponent="0.45" offset="0"/>
+          <feFuncB type="gamma" amplitude="1" exponent="0.45" offset="0"/>
+        </feComponentTransfer>
+      </filter>
+    </defs>''')
+    image = f'<image x="36" y="70" width="374" height="440" preserveAspectRatio="xMidYMid meet" filter="url(#ink)" href="data:image/png;base64,{art}"/>'
+    if theme == "dark":
+        out.append(image)
+    else:
+        out.append(f'<mask id="artwork" mask-type="alpha" maskUnits="userSpaceOnUse" x="36" y="70" width="374" height="440">{image}</mask>')
+        out.append(f'<rect x="36" y="70" width="374" height="440" fill="{colors["art"]}" mask="url(#artwork)"/>')
 
     text(438, 92, config["username"], "text", 17, "bold")
     out.append(f'<path d="M438 107H950" stroke="{colors["border"]}"/>')
