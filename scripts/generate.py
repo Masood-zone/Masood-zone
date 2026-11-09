@@ -43,7 +43,7 @@ THEMES = {
 
 def artwork():
     with Image.open(ROOT / "assets/waterfall.png") as source:
-        gray = ImageOps.grayscale(source.convert("RGB").resize((78, 70), Image.Resampling.LANCZOS))
+        gray = ImageOps.grayscale(source.convert("RGB").resize((78, 58), Image.Resampling.LANCZOS))
     return ImageEnhance.Contrast(gray).enhance(1.25)
 
 
@@ -61,7 +61,7 @@ def render(config, stats, theme, art):
 
     text(38, 48, "Masood-zone / README.md", "muted", 11)
     ramp = ".,:;i1tfLCG08@"
-    for row in range(70):
+    for row in range(art.height):
         for col in range(78):
             brightness = art.getpixel((col, row))
             # Keep the photograph's black circular surround empty.
@@ -69,7 +69,7 @@ def render(config, stats, theme, art):
                 continue
             char = ramp[min(len(ramp) - 1, brightness * len(ramp) // 256)]
             color = "text" if brightness > 150 else "art"
-            text(round(36 + col * 4.65, 2), round(76 + row * 6.3, 2), char, color, 7.8)
+            text(round(36 + col * 4.65, 2), round(105 + row * 6.3, 2), char, color, 7.8)
 
     text(438, 92, config["username"], "text", 17, "bold")
     out.append(f'<path d="M438 107H950" stroke="{colors["border"]}"/>')
@@ -106,7 +106,7 @@ def main():
     for theme, panel in panels.items():
         target = ROOT / f"assets/profile-{theme}.svg"
         temporary = target.with_suffix(".tmp")
-        temporary.write_text(panel, encoding="utf-8")
+        temporary.write_text(panel, encoding="utf-8", newline="\n")
         temporary.replace(target)
     print(json.dumps(stats, sort_keys=True))
 
