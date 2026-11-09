@@ -39,7 +39,7 @@ class ProfileTests(unittest.TestCase):
         for theme in generate.THEMES:
             svg = generate.render(config, {"public_repos": 222, "stars": 0, "followers": 12}, theme, art)
             root = ElementTree.fromstring(svg)
-            self.assertEqual(root.attrib["viewBox"], "0 0 1000 550")
+            self.assertEqual(root.attrib["viewBox"], "36 76 914 438")
             self.assertIn("Name &amp; &lt;test&gt;", svg)
             image = root.find(".//{http://www.w3.org/2000/svg}image")
             original = base64.b64decode(image.attrib["href"].split(",", 1)[1])

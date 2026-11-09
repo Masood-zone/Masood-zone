@@ -51,17 +51,14 @@ def artwork():
 
 def render(config, stats, theme, art):
     colors = THEMES[theme]
-    out = [f'<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="550" viewBox="0 0 1000 550" role="img" aria-labelledby="title desc">',
+    out = ['<svg xmlns="http://www.w3.org/2000/svg" width="914" height="438" viewBox="36 76 914 438" role="img" aria-labelledby="title desc">',
            '<title id="title">Masood Acheampong — GitHub profile</title>',
            '<desc id="desc">ASCII waterfall artwork beside professional details and public GitHub statistics.</desc>',
-           f'<rect width="1000" height="550" rx="14" fill="{colors["bg"]}"/>',
-           f'<rect x="16" y="16" width="968" height="518" rx="10" fill="{colors["panel"]}" stroke="{colors["border"]}"/>',
            '<g font-family="Consolas, Liberation Mono, Menlo, monospace">']
 
     def text(x, y, content, color="text", size=13, weight="normal"):
         out.append(f'<text x="{x}" y="{y}" fill="{colors[color]}" font-size="{size}" font-weight="{weight}" xml:space="preserve">{escape(str(content))}</text>')
 
-    text(38, 48, "Masood-zone / README.md", "muted", 11)
     # Remove the PNG's #0a0a0a matte at render time; retain the source artwork.
     # A soft luminance mask keeps antialiased character edges without a box.
     out.append('''<defs>

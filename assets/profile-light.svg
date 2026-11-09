@@ -1,10 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="550" viewBox="0 0 1000 550" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="914" height="438" viewBox="36 76 914 438" role="img" aria-labelledby="title desc">
 <title id="title">Masood Acheampong — GitHub profile</title>
 <desc id="desc">ASCII waterfall artwork beside professional details and public GitHub statistics.</desc>
-<rect width="1000" height="550" rx="14" fill="#ffffff"/>
-<rect x="16" y="16" width="968" height="518" rx="10" fill="#f6f8fa" stroke="#d0d7de"/>
 <g font-family="Consolas, Liberation Mono, Menlo, monospace">
-<text x="38" y="48" fill="#57606a" font-size="11" font-weight="normal" xml:space="preserve">Masood-zone / README.md</text>
 <defs>
       <filter id="ink" color-interpolation-filters="sRGB" x="0" y="0" width="100%" height="100%">
         <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  1.7008 5.7216 0.5776 0 -0.31372549"/>
